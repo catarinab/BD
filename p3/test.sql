@@ -270,7 +270,7 @@ insert into responsavel_por values ('Batatas', '9684637', 's213sacs29c8a', 'Rain
 
 insert into evento_reposicao values ('8475839485746', 1, 'y823y7ejdl528', 'Iz*One Inc.', '2007-07-05 00:00:01', 20, '7463857');
 insert into evento_reposicao values ('7593743874839', 3, 'y823y7ejdl528', 'Iz*One Inc.', '2007-07-05 00:00:01', 30, '7463857');
-insert into evento_reposicao values ('7593743874839', 3, 'y823y7ejdl528', 'Iz*One Inc.', '2008-04-12 00:00:01', 30, '7463857');
+insert into evento_reposicao values ('7593743874839', 3, 'y823y7ejdl528', 'Iz*One Inc.', '2008-04-12 00:00:01', 30, '8495768');
 insert into evento_reposicao values ('6385763882778', 4, 'y823y7ejdl528', 'Iz*One Inc.', '2013-09-03 00:00:01', 5, '6475869');
 insert into evento_reposicao values ('1829372091828', 2, 's213sacs29c8a', 'Rainbow Bridge World Lda.', '2022-06-02 00:00:01', 15, '8495769');
 insert into evento_reposicao values ('9127277367632', 5, 's213sacs29c8a', 'Rainbow Bridge World Lda.', '2022-05-10 00:00:01', 25, '9684637');

@@ -9,6 +9,19 @@ DELIMITER //
     END//
 DELIMITER ;
 
+/*
+WITH RECURSIVE super AS (
+    SELECT tem_outra.super_categoria
+    FROM tem_outra
+	WHERE categoria = 'Chocolates'
+	UNION ALL
+	SELECT tem_outra.super_categoria
+	FROM super, tem_outra
+	WHERE super.super_categoria = tem_outra.categoria
+)
+SELECT * FROM super UNION ALL (SELECT nome FROM categoria WHERE nome = 'Chocolates');
+*/
+
 
 #RI-4
 DELIMITER //
