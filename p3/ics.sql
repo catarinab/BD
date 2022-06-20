@@ -1,18 +1,14 @@
-#RI-1
+/* RI-1: Uma Categoria nao pode estar contida em si propria */
 DELIMITER //
-    DROP TRIGGER IF EXISTS RI1 //
-    CREATE TRIGGER RI1 BEFORE INSERT ON tem_outra
-    FOR EACH ROW BEGIN 
-        DECLARE x INT;
-        SET x = (SELECT COUNT(*)
-                 FROM tem_outra
-                 WHERE tem_outra.super_categoria = new.categoria
-                );
-        IF x > 0 THEN
+    DROP TRIGGER IF EXISTS ri1 //
+    CREATE TRIGGER ri1 BEFORE INSERT ON tem_outra
+    FOR EACH ROW BEGIN
+        IF new.super_categoria = new.categoria THEN
             CALL raise_error;
         END IF;
     END//
 DELIMITER ;
+
 
 #RI-4
 DELIMITER //

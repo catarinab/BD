@@ -1,17 +1,17 @@
-drop table categoria;
+drop table tem_outra;
+drop table evento_reposicao;
+drop table planograma;
+drop table tem_categoria;
+drop table instalada_em;
+drop table ponto_de_retalho;
+drop table prateleira;
+drop table responsavel_por;
+drop table retalhista;
 drop table categoria_simples;
 drop table super_categoria;
-drop table tem_outra;
 drop table produto;
-drop table tem_categoria;
+drop table categoria;
 drop table ivm;
-drop table ponto_de_retalho;
-drop table instalada_em;
-drop table prateleira;
-drop table planograma;
-drop table retalhista;
-drop table responsavel_por;
-drop table evento_reposicao;
 
 drop type loc;
 
@@ -25,21 +25,21 @@ create table categoria (
 create table categoria_simples (
     nome varchar(100) not null,
     primary key (nome),
-    foreign key (nome) references categoria(nome) on delete cascade
+    foreign key (nome) references categoria(nome)
 );
 
 create table super_categoria (
     nome varchar(100) not null,
     primary key (nome),
-    foreign key (nome) references categoria on delete cascade
+    foreign key (nome) references categoria
 );
 
 create table tem_outra (
     super_categoria varchar(100) not null,
     categoria varchar(100) not null,
     primary key (categoria),
-    foreign key (super_categoria) references super_categoria(nome) on delete cascade,
-    foreign key (categoria) references categoria(nome) on delete cascade,
+    foreign key (super_categoria) references super_categoria(nome),
+    foreign key (categoria) references categoria(nome),
     check (super_categoria != categoria)
 );
 
@@ -48,14 +48,14 @@ create table produto (
     cat varchar(100) not null,
     descr varchar(100),
     primary key (ean),
-    foreign key (cat) references categoria(nome) on delete cascade
+    foreign key (cat) references categoria(nome)
 );
 
 create table tem_categoria (
     ean char(13) not null,
     nome varchar(100) not null,
-    foreign key(ean) references produto(ean) on delete cascade,
-    foreign key(nome) references categoria(nome) on delete cascade
+    foreign key(ean) references produto(ean),
+    foreign key(nome) references categoria(nome)
 );
 
 create table ivm (
@@ -76,8 +76,8 @@ create table instalada_em (
     fabricante char(100) not null,
     sitio char(100) not null,
     primary key(num_serie, fabricante),
-    foreign key(num_serie, fabricante) references ivm(num_serie, fabricante) on delete cascade,
-    foreign key(sitio) references ponto_de_retalho(nome) on delete cascade
+    foreign key(num_serie, fabricante) references ivm(num_serie, fabricante),
+    foreign key(sitio) references ponto_de_retalho(nome)
 
 );
 
@@ -88,8 +88,8 @@ create table prateleira (
     altura float(24) not null,
     nome varchar(100) not null,
     primary key (nro, num_serie, fabricante),
-    foreign key (num_serie, fabricante) references ivm(num_serie, fabricante) on delete cascade,
-    foreign key(nome) references categoria(nome) on delete cascade
+    foreign key (num_serie, fabricante) references ivm(num_serie, fabricante),
+    foreign key(nome) references categoria(nome)
 );
 
 create table planograma (
@@ -99,10 +99,10 @@ create table planograma (
     fabricante char(100) not null,
     face int,
     unidades int,
-    loc int,
-    primary key (ean, nro, lado, altura),
-    foreign key (ean) references produto(ean) on delete cascade,
-    foreign key (nro, num_serie, fabricante) references prateleira(nro, num_serie, fabricante) on delete cascade
+    loc loc,
+    primary key (ean, nro, num_serie, fabricante),
+    foreign key (ean) references produto(ean),
+    foreign key (nro, num_serie, fabricante) references prateleira(nro, num_serie, fabricante)
 );
 
 create table retalhista (
@@ -112,13 +112,14 @@ create table retalhista (
 );
 
 create table responsavel_por (
-    nome_cat varchar(100) not null,
+    nome varchar(100) not null,
     tin varchar(100) not null,
     num_serie varchar(100) not null,
     fabricante char(100) not null,
-    foreign key (tin) references retalhista(tin) on delete cascade,
-    foreign key (num_serie, fabricante) references ivm(num_serie, fabricante) on delete cascade,
-    foreign key (nome_cat) references categoria(nome_cat) on delete cascade
+    primary key (num_serie, fabricante),
+    foreign key (tin) references retalhista(tin),
+    foreign key (num_serie, fabricante) references ivm(num_serie, fabricante),
+    foreign key (nome) references categoria(nome)
 );
 
 create table evento_reposicao (
@@ -130,6 +131,6 @@ create table evento_reposicao (
     unidades int,
     tin varchar(100) not null,
     primary key (ean, nro, num_serie, fabricante, instante),
-    foreign key (ean, nro, num_serie, fabricante) references planograma(ean, nro, num_serie, fabricante) on delete cascade,
-    foreign key (tin) references retalhista(tin) on delete cascade
+    foreign key (ean, nro, num_serie, fabricante) references planograma(ean, nro, num_serie, fabricante),
+    foreign key (tin) references retalhista(tin)
 );
