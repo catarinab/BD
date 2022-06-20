@@ -1,17 +1,17 @@
-drop table tem_outra;
 drop table evento_reposicao;
-drop table planograma;
-drop table tem_categoria;
-drop table instalada_em;
-drop table ponto_de_retalho;
-drop table prateleira;
 drop table responsavel_por;
 drop table retalhista;
-drop table categoria_simples;
-drop table super_categoria;
-drop table produto;
-drop table categoria;
+drop table planograma;
+drop table prateleira;
+drop table instalada_em;
+drop table ponto_de_retalho;
 drop table ivm;
+drop table tem_categoria;
+drop table produto;
+drop table tem_outra;
+drop table super_categoria;
+drop table categoria_simples;
+drop table categoria;
 
 drop type loc;
 
