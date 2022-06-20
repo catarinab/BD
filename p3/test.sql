@@ -112,14 +112,14 @@ create table retalhista (
 );
 
 create table responsavel_por (
-    nome varchar(100) not null,
+    nome_cat varchar(100) not null,
     tin varchar(100) not null,
     num_serie varchar(100) not null,
     fabricante char(100) not null,
     primary key (num_serie, fabricante),
     foreign key (tin) references retalhista(tin) on delete cascade,
     foreign key (num_serie, fabricante) references ivm(num_serie, fabricante) on delete cascade,
-    foreign key (nome) references categoria(nome) on delete cascade
+    foreign key (nome_cat) references categoria(nome) on delete cascade
 );
 
 create table evento_reposicao (
