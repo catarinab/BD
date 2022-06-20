@@ -135,7 +135,7 @@ create table evento_reposicao (
     foreign key (tin) references retalhista(tin) on delete cascade
 );
 
-
+insert into categoria values ('Liquidos');
 insert into categoria values ('Bebidas');
 insert into categoria values ('Refrigerantes');
 insert into categoria values ('Sumos');
@@ -149,8 +149,10 @@ insert into categoria_simples values ('Aguas');
 insert into categoria_simples values ('Chocolates');
 insert into categoria_simples values ('Batatas');
 
+insert into super_categoria values ('Liquidos');
 insert into super_categoria values ('Bebidas');
 
+insert into tem_outra values ('Liquidos', 'Bebidas');
 insert into tem_outra values ('Bebidas', 'Refrigerantes');
 insert into tem_outra values ('Bebidas', 'Aguas');
 insert into tem_outra values ('Bebidas', 'Sumos');
