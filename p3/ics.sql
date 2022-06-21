@@ -36,12 +36,11 @@ DELIMITER //
     END//
 DELIMITER ;
 
-
 /* RI-4) O numero de unidades repostas num Evento de Reposicao nao pode exceder o numero de unidades especificado no Planograma */
 
 DELIMITER //
-    DROP TRIGGER IF EXISTS RI4 //
-    CREATE TRIGGER RI4 BEFORE INSERT ON evento_reposicao
+    DROP TRIGGER IF EXISTS ri4 //
+    CREATE TRIGGER ri4 BEFORE INSERT ON evento_reposicao
     FOR EACH ROW BEGIN 
         DECLARE x INT;
         SET x = (
@@ -62,8 +61,8 @@ DELIMITER ;
 /* RI-5) Um Produto so pode ser reposto numa Prateleira que apresente (pelo menos) uma das Categorias desse produto */
 
 DELIMITER //
-    DROP TRIGGER IF EXISTS RI5 //
-    CREATE TRIGGER RI5 BEFORE INSERT ON evento_reposicao
+    DROP TRIGGER IF EXISTS ri5 //
+    CREATE TRIGGER ri5 BEFORE INSERT ON evento_reposicao
     FOR EACH ROW BEGIN 
         /* Obter as super categorias das categorias do produto da nova reposicao. */
         WITH RECURSIVE super AS (

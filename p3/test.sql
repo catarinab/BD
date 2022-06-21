@@ -264,13 +264,7 @@ insert into retalhista values ('1035576', 'Kang Hyungu');
 insert into retalhista values ('9684637', 'Tim Henson');
 
 insert into responsavel_por values ('Bebidas', '7463857', 'y823y7ejdl528', 'Iz*One Inc.');
-/*insert into responsavel_por values ('Chocolates', '6475869', 'y823y7ejdl528', 'Iz*One Inc.');
-insert into responsavel_por values ('Batatas', '8828910', 'y823y7ejdl528', 'Iz*One Inc.');*/
 insert into responsavel_por values ('Refrigerantes', '8495768', 's213sacs29c8a', 'Rainbow Bridge World Lda.');
-/*insert into responsavel_por values ('Sumos', '8495769', 's213sacs29c8a', 'Rainbow Bridge World Lda.');
-insert into responsavel_por values ('Aguas', '8495770', 's213sacs29c8a', 'Rainbow Bridge World Lda.');
-insert into responsavel_por values ('Chocolates', '1035576', 's213sacs29c8a', 'Rainbow Bridge World Lda.');
-insert into responsavel_por values ('Batatas', '9684637', 's213sacs29c8a', 'Rainbow Bridge World Lda.');*/
 
 insert into evento_reposicao values ('8475839485746', 1, 'y823y7ejdl528', 'Iz*One Inc.', '2007-07-05 00:00:01', 20, '7463857');
 insert into evento_reposicao values ('7593743874839', 3, 'y823y7ejdl528', 'Iz*One Inc.', '2007-07-05 00:00:01', 30, '7463857');
