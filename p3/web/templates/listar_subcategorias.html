@@ -2,15 +2,15 @@
     <html>
         <head>
             <meta charset="utf-8">
-            <title> Projeto Enunciado 3 - c) Eventos Reposicao </title>
+            <title> Projeto Enunciado 3 - d) Listar SubCategorias </title>
         </head>
         <body  style="padding:20px">
                 <h3> Listar Eventos de IVM</h3>
                 <br>
-                <form action="evento_reposicao/result" method="post">
-                    <p>N&uacute;mero da S&eacute;rie de IVM <select name="num_serie">
-                        {% for num_serie in nums_serie %}
-                            <option value={{num_serie[0]}}>{{num_serie[0]}}</option>
+                <form action="sub_categorias/result" method="post">
+                    <p>Super-Categoria: <select name="nome_cat">
+                        {% for categoria in categorias %}
+                            <option value={{categoria[0]}}>{{categoria[0]}}</option>
                         {% endfor %}
                     </select></p>
                     <p><input type="submit" value="Listar"/></p>

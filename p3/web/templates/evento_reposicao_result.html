@@ -1,23 +1,66 @@
-<h1> Eventos de Reposicao de IVM {{num_serie}} </h1>
+<doctype html>
+    <html>
+        <head>
+            <style>
+                table, th, td {
+                    border: 1px solid black;
+                }
+            </style>
+            <meta charset="utf-8">
+            <title> Projeto Enunciado 3 - c) Eventos Reposicao </title>
+        </head>
+        <body  style="padding:20px">
+            <h1> Eventos de Reposi&ccedil;&atilde;o de IVM </h1>
 
-    {% if num_serie == ""%}
-        <h4>Nenhum numero de Serie dado.</h4>
-    {% else %}
-        {% if eventos %}
-            <h3>Eventos</h3>
-            <br>
-            <table>
-                {% for evento in eventos %}
-                    <tr>
-                        <td>{{evento[5]}}</td>
-                        <td> categoria</td>
-                    </tr>
-                {% endfor %}
-            </table>
-            <br>
-            <a href="../app.cgi/"> Voltar </a>
-        {% else %}
-            <h3>Erro</h3>
-            <p>Nao foi possivel obter dados da base de dados.</p>
-        {% endif %}
-    {% endif %}
+            <h3> N&uacute;mero de S&eacute;rie de IVM: {{num_serie}}</h3>
+
+            {% if num_serie == "" %}
+                <h4>Nenhum numero de S&eacute;rie dado.</h4>
+            {% else %}
+                {% if eventos %}
+                    <table>
+                        <h4> Eventos de Reposi&ccedil;&atilde;o: </h4>
+                        <tr>
+                            <th>EAN de Produto</th>
+                            <th>Prateleira</th>
+                            <th>N&uacute;mero de S&eacute;rie</th>
+                            <th>Fabricante</th>
+                            <th>Data</th>
+                            <th>Unidades</th>
+                            <th>TIN</th>
+                        </tr>
+                        {% for evento in eventos %}
+                            <tr>
+                                <td> {{evento[0]}} </td>
+                                <td> {{evento[1]}} </td>
+                                <td> {{evento[2]}} </td>
+                                <td> {{evento[3]}} </td>
+                                <td> {{evento[4]}} </td>
+                                <td> {{evento[5]}} </td>
+                                <td> {{evento[6]}} </td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                    <br>
+                    <table>
+                        <h4> Unidades por Categoria: </h4>
+                        <tr>
+                            <th>Categoria</th>
+                            <th>Unidades</th>
+                        </tr>
+                        {% for evento in eventos_cat %}
+                            <tr>
+                                <td> {{evento[0]}} </td>
+                                <td> {{evento[1]}} </td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                    <br>
+                    <a href="../evento_reposicao"> Voltar </a>
+                {% else %}
+                    <h3>Erro</h3>
+                    <p>Nao foi possivel obter dados da base de dados.</p>
+                {% endif %}
+            {% endif %}
+        </body>
+    </html>

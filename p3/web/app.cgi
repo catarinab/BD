@@ -166,7 +166,9 @@ def evento_reposicao():
     try:
         dbConn = psycopg2.connect(DB_CONNECTION_STRING)
         cursor = dbConn.cursor(cursor_factory = psycopg2.extras.DictCursor)
-        return render_template("evento_reposicao.html")
+        query = "SELECT num_serie FROM evento_reposicao group by num_serie;"
+        cursor.execute(query)
+        return render_template("evento_reposicao.html", nums_serie = cursor)
     except Exception as e:
         return str(e) #Renders a page with the error.
     finally: 
@@ -183,15 +185,59 @@ def evento_reposicao_result():
 
         num_serie = request.form["num_serie"]
 
-        #WHERE num_serie = {str(num_serie)}
-        
-        query = "SELECT * FROM evento_reposicao;" 
-        cursor.execute(query)
-        return render_template("evento_reposicao_result.html", eventos = cursor, num_serie = num_serie)
+        query = "SELECT cat, SUM(unidades) FROM evento_reposicao NATURAL JOIN produto WHERE num_serie=(%s) GROUP BY cat;"
+        values = (num_serie,)
+        cursor.execute(query, values)
+        eventos_cat_ = cursor.fetchall()
+
+        query = "SELECT * FROM evento_reposicao WHERE num_serie=(%s);"
+        values = (num_serie,)
+        cursor.execute(query, values)
+
+        return render_template("evento_reposicao_result.html", eventos = cursor, eventos_cat = eventos_cat_, num_serie = num_serie)
     except Exception as e:
         return str(e) #Renders a page with the error.
     finally: 
         cursor.close()
         dbConn.close()
+
+@app.route('/sub_categorias')
+def listar_subcategorias():
+    dbConn = None 
+    cursor = None
+    try:
+        dbConn = psycopg2.connect(DB_CONNECTION_STRING)
+        cursor = dbConn.cursor(cursor_factory = psycopg2.extras.DictCursor)
+        query = "SELECT nome FROM super_categoria group by nome;"
+        cursor.execute(query)
+        return render_template("listar_subcategorias.html", categorias = cursor)
+    except Exception as e:
+        return str(e) #Renders a page with the error.
+    finally: 
+        cursor.close()
+        dbConn.close()
+
+@app.route('/sub_categorias/result', methods=["POST"])
+def listar_subcategorias_result():
+    dbConn = None 
+    cursor = None
+    try:
+        dbConn = psycopg2.connect(DB_CONNECTION_STRING)
+        cursor = dbConn.cursor(cursor_factory = psycopg2.extras.DictCursor)
+
+        nome_cat = request.form["nome_cat"]
+
+        query = "WITH RECURSIVE super AS ( SELECT tem_outra.categoria FROM tem_outra WHERE super_categoria = (%s) UNION ALL SELECT tem_outra.categoria FROM super, tem_outra WHERE super.categoria = tem_outra.super_categoria) SELECT * FROM super;"
+        values = (nome_cat,)
+        cursor.execute(query, values)
+
+        return render_template("listar_subcategorias_result.html", sub_categorias = cursor, nome_cat = nome_cat)
+    except Exception as e:
+        return str(e) #Renders a page with the error.
+    finally: 
+        cursor.close()
+        dbConn.close()
+
+
     
 CGIHandler().run(app)

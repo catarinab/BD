@@ -1,0 +1,28 @@
+<doctype html>
+    <html>
+        <head>
+            <style>
+                table, th, td {
+                    border: 1px solid black;
+                }
+            </style>
+            <meta charset="utf-8">
+            <title> Projeto Enunciado 3 - d) Listar Sub-Categorias </title>
+        </head>
+        <body  style="padding:20px">
+            <h1> Sub-Categorias de Super-Categoria </h1>
+            <h3> Nome da Super-Categoria: {{nome_cat}}</h3>
+            <table>
+                <tr>
+                    <th>Sub-Categorias</th>
+                </tr>
+                {% for categoria in sub_categorias %}
+                <tr>
+                    <td> {{categoria[0]}} </td>
+                </tr>
+            {% endfor %}
+            </table>
+            <br>
+            <a href="../sub_categorias"> Voltar </a>
+        </body>
+    </html>
