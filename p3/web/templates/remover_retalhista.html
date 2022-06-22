@@ -1,0 +1,26 @@
+<doctype html>
+    <html>
+        <head>
+            <meta charset="utf-8">
+            <title> Projeto Enunciado 3 - 5.b) Remover </title>
+        </head>
+        <body  style="padding:20px">
+            {% if retalhistas %}
+                <h3>Retalhista a remover</h3><br>
+                <form action="remover/update" method="post">
+                    <p>Retalhista a remover: <select name="retalhista_remove">
+                        <option value="">Nenhum</option>
+                        {% for retalhista in retalhistas %}
+                            <option value={{retalhista[0]}}>{{retalhista[0]}} {{retalhista[1]}}</option>
+                        {% endfor %}
+                    </select></p>
+    
+                    <p><input type="submit" value="remover"/></p>
+                </form><br>
+                <a href="../retalhista"> Voltar </a>
+            {% else %}
+                <h3>Erro</h3>
+                <p>Nao foi possivel obter dados da base de dados.</p>
+            {% endif %}
+        </body>
+    </html>
