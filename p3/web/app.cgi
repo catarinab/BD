@@ -183,6 +183,8 @@ def evento_reposicao_result():
         dbConn = psycopg2.connect(DB_CONNECTION_STRING)
         cursor = dbConn.cursor(cursor_factory = psycopg2.extras.DictCursor)
 
+        cursor.execute("START TRANSACTION;")
+
         num_serie = request.form["num_serie"]
 
         query = "SELECT cat, SUM(unidades) FROM evento_reposicao NATURAL JOIN produto WHERE num_serie=(%s) GROUP BY cat;"
@@ -194,7 +196,12 @@ def evento_reposicao_result():
         values = (num_serie,)
         cursor.execute(query, values)
 
-        return render_template("evento_reposicao_result.html", eventos = cursor, eventos_cat = eventos_cat_, num_serie = num_serie)
+        html = render_template("evento_reposicao_result.html", eventos = cursor, eventos_cat = eventos_cat_, num_serie = num_serie)
+
+        cursor.execute("COMMIT;")
+        dbConn.commit()
+        
+        return html
     except Exception as e:
         return str(e) #Renders a page with the error.
     finally: 
