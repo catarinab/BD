@@ -47,30 +47,36 @@ def categoria_inserir():
     try:
         dbConn = psycopg2.connect(DB_CONNECTION_STRING)
         cursor = dbConn.cursor(cursor_factory = psycopg2.extras.DictCursor)
+        cursor.execute("START TRANSACTION;")
 
         nova_categoria = request.form["nova_categoria"]
         super_categoria = request.form["super_categoria"]
 
-        query = f'''INSERT INTO categoria VALUES ({(nova_categoria,)});'''
-        cursor.execute(query)
+        query = "INSERT INTO categoria (nome) VALUES (%s);"
+        values = (nova_categoria,)
 
-        query = f'''INSERT INTO categoria_simples VALUES ({(nova_categoria,)});'''
-        cursor.execute(query)
+        query += "INSERT INTO categoria_simples (nome) VALUES (%s);"
+        values += (nova_categoria,)
 
         if super_categoria != "":
-            query = f'''SELECT COUNT(*) FROM super_categoria WHERE nome = {super_categoria};'''
-            cursor.execute(query)
+            query_count = "SELECT COUNT(*) FROM super_categoria WHERE nome = (%s);"
+            values_count = (super_categoria,)
+            cursor.execute(query_count, values_count)
 
-            if cursor['count'] == 0:
-                query = f'''INSERT INTO super_categoria VALUES ({(super_categoria,)});'''
-                cursor.execute(query)
+            if cursor.fetchone()['count'] == 0:
+                query += "INSERT INTO super_categoria (nome) VALUES (%s);"
+                values += (super_categoria,)
 
-                query = f'''DELETE FROM categoria_simples WHERE nome = {super_categoria};'''
-                cursor.execute(query)
+                query += "DELETE FROM categoria_simples WHERE nome = (%s);"
+                values += (super_categoria,)
 
-            query = f'''INSERT INTO tem_outra VALUES ({(super_categoria, nova_categoria)});'''
-            cursor.execute(query)
-            
+            query += "INSERT INTO tem_outra (super_categoria, categoria) VALUES (%s, %s);"
+            values += (super_categoria, nova_categoria)
+
+        cursor.execute(query, values)
+
+        cursor.execute("COMMIT;")
+        dbConn.commit()
         return query
     except Exception as e:
         return str(e) #Renders a page with the error.
@@ -79,15 +85,74 @@ def categoria_inserir():
         dbConn.close()
 
 @app.route('/categoria/remover')
-def categorias_remover_op():
+def categoria_remover_op():
+    dbConn = None 
+    cursor_super = None
+    cursor_simples = None
+    cursor_sem_produtos = None
+    try:
+        dbConn = psycopg2.connect(DB_CONNECTION_STRING)
+
+        cursor_super = dbConn.cursor(cursor_factory = psycopg2.extras.DictCursor)
+        query_super = "SELECT nome FROM super_categoria;" 
+        cursor_super.execute(query_super)
+
+        cursor_simples = dbConn.cursor(cursor_factory = psycopg2.extras.DictCursor)
+        query_simples = "SELECT nome FROM categoria_simples INTERSECT SELECT cat FROM produto;" 
+        cursor_simples.execute(query_simples)
+
+        cursor_sem_produtos = dbConn.cursor(cursor_factory = psycopg2.extras.DictCursor)
+        query_sem_produtos = "SELECT nome FROM categoria_simples EXCEPT SELECT cat FROM produto;" 
+        cursor_sem_produtos.execute(query_sem_produtos)
+
+        return render_template("remover_categoria.html", super_categorias = cursor_super, categorias_simples = cursor_simples, simples_sem_produtos = cursor_sem_produtos)
+    except Exception as e:
+        return str(e) #Renders a page with the error.
+    finally: 
+        cursor_super.close()
+        cursor_simples.close()
+        cursor_sem_produtos.close()
+        dbConn.close()
+
+@app.route('/categoria/remover/update', methods=["POST"])
+def categoria_remover():
     dbConn = None 
     cursor = None
     try:
         dbConn = psycopg2.connect(DB_CONNECTION_STRING)
         cursor = dbConn.cursor(cursor_factory = psycopg2.extras.DictCursor)
-        query = "SELECT nome FROM categoria;" 
-        cursor.execute(query)
-        return render_template("remover_categoria.html", categorias = cursor)
+        cursor.execute("START TRANSACTION;")
+
+        categoria = request.form["nome"]
+
+        query = "DELETE FROM tem_outra WHERE categoria = (%s);"
+        values = (categoria,)
+
+        query_outra = "SELECT super_categoria FROM tem_outra WHERE categoria = (%s)"
+        values_outra = (categoria,)
+        cursor.execute(query_outra, values_outra)
+        for tem_outra in cursor.fetchall():
+            query_outra = "SELECT COUNT(*) FROM tem_outra WHERE super_categoria = (%s)"
+            super_categoria = tem_outra['super_categoria']
+            values_outra = (super_categoria,)
+            cursor.execute(query_outra, values_outra)
+            if (cursor.fetchone()['count']) == 1:
+                query += "DELETE FROM super_categoria WHERE nome = (%s);"
+                values += (super_categoria,)
+
+                query += "INSERT INTO categoria_simples (nome) VALUES (%s);"
+                values += (super_categoria,)
+
+        query += "DELETE FROM categoria_simples WHERE nome = (%s);"
+        values += (categoria,)
+
+        query += "DELETE FROM categoria WHERE nome = (%s);"
+        values += (categoria,)
+        cursor.execute(query, values)
+
+        cursor.execute("COMMIT;")
+        dbConn.commit()
+        return query
     except Exception as e:
         return str(e) #Renders a page with the error.
     finally: 

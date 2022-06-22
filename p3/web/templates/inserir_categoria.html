@@ -6,9 +6,8 @@
     </head>
     <body  style="padding:20px">
         {% if categorias %}
-            <h3>Nova categoria</h3>
-            <br>
-            <form action="categoria/inserir/update" method="post">
+            <h3>Nova categoria</h3><br>
+            <form action="inserir/update" method="post">
                 <p>Categoria: <input type="text" name="nova_categoria"/></p>
                 <p>Super-Categoria: <select name="super_categoria">
                     <option value="">Nenhum</option>
@@ -18,8 +17,7 @@
                 </select></p>
 
                 <p><input type="submit" value="Inserir"/></p>
-            </form>
-            <br>
+            </form><br>
             <a href="../categoria"> Voltar </a>
         {% else %}
             <h3>Erro</h3>
