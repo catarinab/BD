@@ -1,0 +1,23 @@
+<h1> Eventos de Reposicao de IVM {{num_serie}} </h1>
+
+    {% if num_serie == ""%}
+        <h4>Nenhum numero de Serie dado.</h4>
+    {% else %}
+        {% if eventos %}
+            <h3>Eventos</h3>
+            <br>
+            <table>
+                {% for evento in eventos %}
+                    <tr>
+                        <td>{{evento[5]}}</td>
+                        <td> categoria</td>
+                    </tr>
+                {% endfor %}
+            </table>
+            <br>
+            <a href="../app.cgi/"> Voltar </a>
+        {% else %}
+            <h3>Erro</h3>
+            <p>Nao foi possivel obter dados da base de dados.</p>
+        {% endif %}
+    {% endif %}

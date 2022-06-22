@@ -93,5 +93,40 @@ def categorias_remover_op():
     finally: 
         cursor.close()
         dbConn.close()
+
+@app.route('/evento_reposicao')
+def evento_reposicao():
+    dbConn = None 
+    cursor = None
+    try:
+        dbConn = psycopg2.connect(DB_CONNECTION_STRING)
+        cursor = dbConn.cursor(cursor_factory = psycopg2.extras.DictCursor)
+        return render_template("evento_reposicao.html")
+    except Exception as e:
+        return str(e) #Renders a page with the error.
+    finally: 
+        cursor.close()
+        dbConn.close()
+
+@app.route('/evento_reposicao/result', methods=["POST"])
+def evento_reposicao_result():
+    dbConn = None 
+    cursor = None
+    try:
+        dbConn = psycopg2.connect(DB_CONNECTION_STRING)
+        cursor = dbConn.cursor(cursor_factory = psycopg2.extras.DictCursor)
+
+        num_serie = request.form["num_serie"]
+
+        #WHERE num_serie = {str(num_serie)}
+        
+        query = "SELECT * FROM evento_reposicao;" 
+        cursor.execute(query)
+        return render_template("evento_reposicao_result.html", eventos = cursor, num_serie = num_serie)
+    except Exception as e:
+        return str(e) #Renders a page with the error.
+    finally: 
+        cursor.close()
+        dbConn.close()
     
 CGIHandler().run(app)
