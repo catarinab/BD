@@ -87,31 +87,31 @@ def categoria_inserir():
 @app.route('/categoria/remover')
 def categoria_remover_op():
     dbConn = None 
-    cursor_super = None
-    cursor_simples = None
-    cursor_sem_produtos = None
+    cursor = None
     try:
         dbConn = psycopg2.connect(DB_CONNECTION_STRING)
+        cursor = dbConn.cursor(cursor_factory = psycopg2.extras.DictCursor)
+        cursor.execute("START TRANSACTION;")
 
-        cursor_super = dbConn.cursor(cursor_factory = psycopg2.extras.DictCursor)
-        query_super = "SELECT nome FROM super_categoria;" 
-        cursor_super.execute(query_super)
+        query = "SELECT nome FROM super_categoria;" 
+        cursor.execute(query)
+        super_categorias = cursor.fetchall()
 
-        cursor_simples = dbConn.cursor(cursor_factory = psycopg2.extras.DictCursor)
-        query_simples = "SELECT nome FROM categoria_simples INTERSECT SELECT cat FROM produto;" 
-        cursor_simples.execute(query_simples)
+        query = "SELECT nome FROM categoria_simples INTERSECT SELECT cat FROM produto;" 
+        cursor.execute(query)
+        categorias_simples = cursor.fetchall()
 
-        cursor_sem_produtos = dbConn.cursor(cursor_factory = psycopg2.extras.DictCursor)
-        query_sem_produtos = "SELECT nome FROM categoria_simples EXCEPT SELECT cat FROM produto;" 
-        cursor_sem_produtos.execute(query_sem_produtos)
+        query = "SELECT nome FROM categoria_simples EXCEPT SELECT cat FROM produto;" 
+        cursor.execute(query)
 
-        return render_template("remover_categoria.html", super_categorias = cursor_super, categorias_simples = cursor_simples, simples_sem_produtos = cursor_sem_produtos)
+        html = render_template("remover_categoria.html", super_categorias = super_categorias, categorias_simples = categorias_simples, simples_sem_produtos = cursor)
+
+        cursor.execute("COMMIT;")
+        return html
     except Exception as e:
         return str(e) #Renders a page with the error.
     finally: 
-        cursor_super.close()
-        cursor_simples.close()
-        cursor_sem_produtos.close()
+        cursor.close()
         dbConn.close()
 
 @app.route('/categoria/remover/update', methods=["POST"])

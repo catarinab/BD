@@ -10,8 +10,9 @@
         <title> Projeto Enunciado 3 - 5.a) Remover </title>
     </head>
     <body  style="padding:20px">
-        {% if super_categorias and categorias_simples and simples_sem_produtos %}
-            <h3>Categorias</h3>
+        <!-- Apenas o parametro simples_sem_produtos e' o cursor -->
+        {% if simples_sem_produtos %}
+            <h3>Categorias</h3><br>
             <h4>Super Categorias</h4>
             <table>
                 <tr>
