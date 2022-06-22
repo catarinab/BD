@@ -1,5 +1,7 @@
 /* schema.sql */
 
+drop view vendas;
+
 drop table evento_reposicao;
 drop table responsavel_por;
 drop table retalhista;
@@ -272,3 +274,23 @@ insert into evento_reposicao values ('7593743874839', 3, 'y823y7ejdl528', 'Iz*On
 insert into evento_reposicao values ('6385763882778', 4, 'y823y7ejdl528', 'Iz*One Inc.', '2013-09-03 00:00:01', 5, '6475869');
 insert into evento_reposicao values ('1829372091828', 2, 's213sacs29c8a', 'Rainbow Bridge World Lda.', '2022-06-02 00:00:01', 15, '8495769');
 insert into evento_reposicao values ('9127277367632', 5, 's213sacs29c8a', 'Rainbow Bridge World Lda.', '2022-05-10 00:00:01', 25, '9684637');
+
+/* view.sql */
+
+create VIEW vendas(ean, cat, ano, trimestre, mes, dia_mes, dia_semana, distrito, concelho, unidades) AS (
+    select produto.ean as ean,
+        categoria.nome as cat, 
+        extract(year from evento_reposicao.instante) as ano, 
+        extract(quarter from evento_reposicao.instante) as trimestre, 
+        extract(month from evento_reposicao.instante) as mes, 
+        extract(day from evento_reposicao.instante) as dia_mes, 
+        extract(dow from evento_reposicao.instante) as dia_semana,
+        ponto_de_retalho.distrito as distrito, 
+        ponto_de_retalho.concelho as concelho, 
+        evento_reposicao.unidades as unidades
+    from produto, categoria, ponto_de_retalho, evento_reposicao, instalada_em
+    where evento_reposicao.ean = produto.ean 
+        and categoria.nome = produto.cat 
+        and evento_reposicao.num_serie = instalada_em.num_serie 
+        and ponto_de_retalho.nome = instalada_em.sitio 
+)

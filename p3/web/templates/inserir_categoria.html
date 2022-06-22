@@ -1,0 +1,29 @@
+<doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title> Projeto Enunciado 3 - 5.a) Inserir </title>
+    </head>
+    <body  style="padding:20px">
+        {% if categorias %}
+            <h3>Nova categoria</h3>
+            <br>
+            <form action="categoria/inserir/update" method="post">
+                <p>Categoria: <input type="text" name="nova_categoria"/></p>
+                <p>Super-Categoria: <select name="super_categoria">
+                    <option value="">Nenhum</option>
+                    {% for categoria in categorias %}
+                        <option value={{categoria[0]}}>{{categoria[0]}}</option>
+                    {% endfor %}
+                </select></p>
+
+                <p><input type="submit" value="Inserir"/></p>
+            </form>
+            <br>
+            <a href="../categoria"> Voltar </a>
+        {% else %}
+            <h3>Erro</h3>
+            <p>Nao foi possivel obter dados da base de dados.</p>
+        {% endif %}
+    </body>
+</html>

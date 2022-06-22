@@ -17,7 +17,3 @@ CREATE VIEW vendas(ean, cat, ano, trimestre, mes, dia_mes, dia_semana, distrito,
         AND evento_reposicao.num_serie = instalada_em.num_serie 
         AND ponto_de_retalho.nome = instalada_em.sitio 
 )
-
-/* Para visualizacao */
-
-SELECT * FROM vendas;
