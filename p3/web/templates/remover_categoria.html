@@ -10,21 +10,52 @@
         <title> Projeto Enunciado 3 - 5.a) Remover </title>
     </head>
     <body  style="padding:20px">
-        {% if categorias %}
-            <h3>Categorias</h3>
-            <br>
+        <!-- Apenas o parametro simples_sem_produtos e' o cursor -->
+        {% if simples_sem_produtos %}
+            <h3>Categorias</h3><br>
+            <h4>Super Categorias</h4>
             <table>
-                {% for categoria in categorias %}
+                <tr>
+                    <th>Super Categoria</th>
+                    <th>A&ccedil;&atilde;o</th>
+                </tr>
+                {% for categoria in super_categorias %}
+                    <tr>
+                        <td>{{categoria[0]}}</td>
+                        <td>Nenhuma</td>
+                    </tr>
+                {% endfor %}
+            </table><br><br>
+            <h4>Categorias Simples</h4>
+            <h5>Com Produtos</h5>
+            <table>
+                <tr>
+                    <th>Categoria Simples</th>
+                    <th>A&ccedil;&atilde;o</th>
+                </tr>
+                {% for categoria in categorias_simples %}
+                    <tr>
+                        <td>{{categoria[0]}}</td>
+                        <td>Nenhuma</td>
+                    </tr>
+                {% endfor %}
+            </table><br>
+            <h5>Sem Produtos</h5>
+            <table>
+                <tr>
+                    <th>Categoria Simples</th>
+                    <th>A&ccedil;&atilde;o</th>
+                </tr>
+                {% for categoria in simples_sem_produtos %}
                     <tr>
                         <td>{{categoria[0]}}</td>
                         <td>
-                            <form action='remover_categoria' method='post'>
+                            <form action='remover/update' method='post'>
                                 <input type='hidden' name='nome' value='{{categoria[0]}}'>
                                 <input type='submit' value='Remover'>
                     </form></td></tr>
                 {% endfor %}
-            </table>
-            <br>
+            </table><br>
             <a href="../categoria"> Voltar </a>
         {% else %}
             <h3>Erro</h3>
