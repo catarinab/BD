@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 
+import re
 from wsgiref.handlers import CGIHandler
 from flask import Flask, render_template, request
 
@@ -158,6 +159,99 @@ def categoria_remover():
     finally: 
         cursor.close()
         dbConn.close()
+
+@app.route('/retalhista')
+def retalhista_ops():
+    return render_template("retalhista.html")
+
+@app.route('/retalhista/inserir')
+def retalhista_inserir_op():
+    dbConn = None 
+    cursor = None
+    try:
+        dbConn = psycopg2.connect(DB_CONNECTION_STRING)
+        cursor = dbConn.cursor(cursor_factory = psycopg2.extras.DictCursor)
+
+        return render_template("inserir_retalhista.html")
+
+    except Exception as e:
+        return str(e) #Renders a page with the error.
+    finally: 
+        cursor.close()
+        dbConn.close()
+
+@app.route('/retalhista/inserir/update', methods=["POST"])
+def retalhista_inserir():
+    dbConn = None 
+    cursor = None
+    try:
+        dbConn = psycopg2.connect(DB_CONNECTION_STRING)
+        cursor = dbConn.cursor(cursor_factory = psycopg2.extras.DictCursor)
+
+        tin_retalhista = request.form["tin_novo_retalhista"]
+        nome_retalhista = request.form["nome_novo_retalhista"]
+
+        query = "INSERT INTO retalhista (tin,nome) VALUES (%s, %s);"
+        values = (tin_retalhista,nome_retalhista,)
+
+        cursor.execute(query, values)
+
+        cursor.execute("COMMIT;")
+        dbConn.commit()
+        return query
+    except Exception as e:
+        return str(e) #Renders a page with the error.
+    finally: 
+        cursor.close()
+        dbConn.close()
+
+
+@app.route('/retalhista/remover')
+def retalhista_remover_op():
+    dbConn = None 
+    cursor = None
+    try:
+        dbConn = psycopg2.connect(DB_CONNECTION_STRING)
+        cursor = dbConn.cursor(cursor_factory = psycopg2.extras.DictCursor)
+        query = "SELECT tin, nome FROM retalhista;" 
+        cursor.execute(query)
+        return render_template("remover_retalhista.html", retalhistas = cursor)
+    except Exception as e:
+        return str(e) #Renders a page with the error.
+    finally: 
+        cursor.close()
+        dbConn.close()
+
+
+@app.route('/retalhista/remover/update', methods=["POST"])
+def retalhista_remover():
+    dbConn = None 
+    cursor = None
+    try:
+        dbConn = psycopg2.connect(DB_CONNECTION_STRING)
+        cursor = dbConn.cursor(cursor_factory = psycopg2.extras.DictCursor)
+
+        retalhista = request.form["retalhista_remove"]
+
+        query = "DELETE FROM evento_reposicao WHERE tin = (%s);"
+        values = (retalhista,)
+
+        query += "DELETE FROM responsavel_por WHERE tin = (%s);"
+        values += (retalhista,)
+
+        query += "DELETE FROM retalhista WHERE tin = (%s);"
+        values += (retalhista,)
+        cursor.execute(query, values)
+
+        cursor.execute("COMMIT;")
+        dbConn.commit()
+        return query
+    except Exception as e:
+        return str(e) #Renders a page with the error.
+    finally: 
+        cursor.close()
+        dbConn.close()
+
 
 @app.route('/evento_reposicao')
 def evento_reposicao():
