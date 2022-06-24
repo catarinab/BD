@@ -1,6 +1,9 @@
 DROP TRIGGER IF EXISTS verifica_categoria_em_si_mesma ON tem_outra;
 DROP TRIGGER IF EXISTS verifica_unidades_repostas ON evento_reposicao;
 DROP TRIGGER IF EXISTS verifica_produto_reposto_categoria ON evento_reposicao;
+DROP FUNCTION IF EXISTS verifica_categoria_em_si_mesma;
+DROP FUNCTION IF EXISTS verifica_unidades_repostas;
+DROP FUNCTION IF EXISTS verifica_produto_reposto_categoria;
 
 /* RI-1) Uma Categoria nao pode estar contida em si propria */
 CREATE OR REPLACE FUNCTION verifica_categoria_em_si_mesma() RETURNS TRIGGER AS $$
@@ -32,6 +35,7 @@ BEGIN
     IF x > 0 THEN
         RAISE EXCEPTION 'Categoria nao pode ser super categoria de si mesma';
     END IF;
+    RETURN NEW;
 END
 $$ LANGUAGE plpgsql;
 
@@ -53,6 +57,7 @@ BEGIN
     IF x > 0 THEN
         RAISE EXCEPTION ' O numero de unidades repostas num Evento de Reposicao nao pode exceder o numero de unidades especificado no Planograma';
     END IF;
+    RETURN NEW;
 END
 $$ LANGUAGE plpgsql;
 
@@ -94,6 +99,7 @@ BEGIN
     IF x <= 0 THEN
         RAISE EXCEPTION ' Um Produto so pode ser reposto numa Prateleira que apresente (pelo menos) uma das Categorias desse produto';
     END IF;
+    RETURN NEW;
 END
 $$ LANGUAGE plpgsql;
 
