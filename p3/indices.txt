@@ -1,0 +1,17 @@
+/******7.1******/
+
+ Esta query pode ser otimizada criando índices hash sobre o tin do retalhista. Deste modo o join das tabelas pode usar um inner index scan.
+ Podemos ainda otimizar mais a query adicionando um segundo índice, desta vez à tabela responsavel_por na coluna nome_cat, a fim de responder 
+ à condicao sobre esta coluna com um index only scan. A utilização de índices hash é preferida pelo facto das condições se tratarem de 
+ simples igualdades.
+
+create index tin_index on retalhista using hash(tin);
+create index prod_index on responsavel_por using hash(nome_cat);
+
+/******7.2******/
+
+Esta query pode ser otimizada criando indices sobre a descr e a cat ambos na tabela produto. Devemos utilizar um indice hash para a cat pois trata-se de uma simples comparação, e na descr devemos usar 'este tipo de indice i guess' pois sabemos como começa a pesquisa no indice. Apenas um deles é necessário, o melhor a utilizar irá depender da seletividade das condições.
+
+
+create index desc_index on produto(descr)
+create index cat_index on produto using hash(cat)
